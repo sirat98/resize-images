@@ -1,0 +1,214 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPojC6eA8zNqnxgpeEgA5Tc",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/sirat98/resize-images/blob/main/resizing%20images\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "dBriiLwlXK8m"
+      },
+      "outputs": [],
+      "source": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "EBeHKdFNXOux",
+        "outputId": "5a771d8e-cbf4-44ce-bee3-def4fbd7c9af"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount(\"/content/drive\", force_remount=True).\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "from PIL import Image\n",
+        "from multiprocessing import Pool\n",
+        "\n",
+        "def resize_image(args):\n",
+        "    input_path, output_path, new_size = args\n",
+        "    try:\n",
+        "        with Image.open(input_path) as img:\n",
+        "            img.thumbnail(new_size)\n",
+        "            img.save(output_path)\n",
+        "        print(f\"Resized {input_path} and saved as {output_path}\")\n",
+        "    except Exception as e:\n",
+        "        print(f\"Error processing {input_path}: {str(e)}\")\n",
+        "\n",
+        "def resize_images_in_directory(input_dir, output_dir, new_size):\n",
+        "    if not os.path.exists(output_dir):\n",
+        "        os.makedirs(output_dir)\n",
+        "\n",
+        "    image_files = [f for f in os.listdir(input_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp'))]\n",
+        "\n",
+        "    args_list = [(os.path.join(input_dir, f),\n",
+        "                  os.path.join(output_dir, f),\n",
+        "                  new_size) for f in image_files]\n",
+        "\n",
+        "    with Pool() as pool:\n",
+        "        pool.map(resize_image, args_list)\n",
+        "\n",
+        "if __name__ == '__main__':\n",
+        "    input_directory = '/content/drive/MyDrive/gursirat' #path of the input directory\n",
+        "    output_directory = '/content/drive/MyDrive/video frames' # path of the putput directory\n",
+        "    new_size = (300, 300)  # Max width, max height\n",
+        "\n",
+        "    resize_images_in_directory(input_directory, output_directory, new_size)\n",
+        "    print(\"All images have been processed.\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "_H6GT3MBYX32",
+        "outputId": "dc518884-8594-4b0d-cb14-64f0118eacc4"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Resized /content/drive/MyDrive/gursirat/g12.jpeg and saved as /content/drive/MyDrive/video frames/g12.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g14 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/g14 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g12 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/g12 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g14.jpeg and saved as /content/drive/MyDrive/video frames/g14.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g12 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/g12 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g14 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/g14 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g12 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/g12 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g15 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/g15 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g12 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/g12 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g15 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/g15 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g13 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/g13 - Copy (3).jpegResized /content/drive/MyDrive/gursirat/g15.jpeg and saved as /content/drive/MyDrive/video frames/g15.jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/g13 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/g13 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g15 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/g15 - Copy.jpegResized /content/drive/MyDrive/gursirat/g13.jpeg and saved as /content/drive/MyDrive/video frames/g13.jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/g15 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/g15 - Copy (4).jpegResized /content/drive/MyDrive/gursirat/g13 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/g13 - Copy (2).jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/g13 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/g13 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c1.jpg and saved as /content/drive/MyDrive/video frames/c1.jpg\n",
+            "Resized /content/drive/MyDrive/gursirat/g14 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/g14 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/g14 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/g14 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c1 - Copy (3).jpg and saved as /content/drive/MyDrive/video frames/c1 - Copy (3).jpg\n",
+            "Resized /content/drive/MyDrive/gursirat/c1 - Copy (4).jpg and saved as /content/drive/MyDrive/video frames/c1 - Copy (4).jpg\n",
+            "Resized /content/drive/MyDrive/gursirat/c1 - Copy.jpg and saved as /content/drive/MyDrive/video frames/c1 - Copy.jpg\n",
+            "Resized /content/drive/MyDrive/gursirat/c2 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c2 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c2 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c2 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c1 - Copy (2).jpg and saved as /content/drive/MyDrive/video frames/c1 - Copy (2).jpgResized /content/drive/MyDrive/gursirat/c2 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c2 - Copy.jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c4 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c4 - Copy (4).jpegResized /content/drive/MyDrive/gursirat/c2 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c2 - Copy (2).jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c4 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c4 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c2.jpeg and saved as /content/drive/MyDrive/video frames/c2.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c4 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c4 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c4 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c4 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c5 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c5 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c3 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c3 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c5 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c5 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c3 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c3 - Copy (2).jpegResized /content/drive/MyDrive/gursirat/c5 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c5 - Copy (3).jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c3.jpeg and saved as /content/drive/MyDrive/video frames/c3.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c5 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c5 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c3 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c3 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c5.jpeg and saved as /content/drive/MyDrive/video frames/c5.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c3 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c3 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c6 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c6 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c4.jpeg and saved as /content/drive/MyDrive/video frames/c4.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c6 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c6 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c6.jpeg and saved as /content/drive/MyDrive/video frames/c6.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c6 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c6 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c6 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c6 - Copy.jpegResized /content/drive/MyDrive/gursirat/c9 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c9 - Copy (4).jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c7 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c7 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c9 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c9 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c9.jpeg and saved as /content/drive/MyDrive/video frames/c9.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c7 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c7 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c9 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c9 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c7 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c7 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c9 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c9 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c7.jpeg and saved as /content/drive/MyDrive/video frames/c7.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c7 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c7 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c13 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c13 - Copy (3).jpegResized /content/drive/MyDrive/gursirat/c8 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c8 - Copy.jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c8.jpeg and saved as /content/drive/MyDrive/video frames/c8.jpegResized /content/drive/MyDrive/gursirat/c13.jpeg and saved as /content/drive/MyDrive/video frames/c13.jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c13 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c13 - Copy.jpegResized /content/drive/MyDrive/gursirat/c8 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c8 - Copy (4).jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c13 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c13 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c8 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c8 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c8 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c8 - Copy (2).jpegResized /content/drive/MyDrive/gursirat/c13 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c13 - Copy (2).jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c14.jpeg and saved as /content/drive/MyDrive/video frames/c14.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c14 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c14 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c14 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c14 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c14 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c14 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c14 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c14 - Copy (2).jpegResized /content/drive/MyDrive/gursirat/c17 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c17 - Copy (4).jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c19 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c19 - Copy (4).jpegResized /content/drive/MyDrive/gursirat/c15.jpeg and saved as /content/drive/MyDrive/video frames/c15.jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c19 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c19 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c15 - Copy (4).jpeg and saved as /content/drive/MyDrive/video frames/c15 - Copy (4).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c19 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c19 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c15 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c15 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c19.jpeg and saved as /content/drive/MyDrive/video frames/c19.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c15 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c15 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c19 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c19 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c15 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c15 - Copy (2).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c19 - Copy (3).jpg and saved as /content/drive/MyDrive/video frames/c19 - Copy (3).jpg\n",
+            "Resized /content/drive/MyDrive/gursirat/c19 - Copy (4).jpg and saved as /content/drive/MyDrive/video frames/c19 - Copy (4).jpg\n",
+            "Resized /content/drive/MyDrive/gursirat/c17 - Copy.jpeg and saved as /content/drive/MyDrive/video frames/c17 - Copy.jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c19 - Copy (2).jpg and saved as /content/drive/MyDrive/video frames/c19 - Copy (2).jpg\n",
+            "Resized /content/drive/MyDrive/gursirat/c19.jpg and saved as /content/drive/MyDrive/video frames/c19.jpgResized /content/drive/MyDrive/gursirat/c17.jpeg and saved as /content/drive/MyDrive/video frames/c17.jpeg\n",
+            "\n",
+            "Resized /content/drive/MyDrive/gursirat/c19 - Copy.jpg and saved as /content/drive/MyDrive/video frames/c19 - Copy.jpg\n",
+            "Resized /content/drive/MyDrive/gursirat/c17 - Copy (3).jpeg and saved as /content/drive/MyDrive/video frames/c17 - Copy (3).jpeg\n",
+            "Resized /content/drive/MyDrive/gursirat/c17 - Copy (2).jpeg and saved as /content/drive/MyDrive/video frames/c17 - Copy (2).jpeg\n",
+            "All images have been processed.\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
